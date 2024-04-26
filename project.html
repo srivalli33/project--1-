@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Form</title>
+<style>
+    .field {
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+    <form id="dynamicForm">
+        <div class="field">
+            <label>Name:</label>
+            <input type="text" name="name" required>
+            <label>Age:</label>
+            <input type="number" name="age" required>
+        </div>
+        <button type="button" id="addFieldBtn">Add Field</button>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("dynamicForm");
+            const addFieldBtn = document.getElementById("addFieldBtn");
+
+            addFieldBtn.addEventListener("click", function () {
+                addField();
+            });
+
+            form.addEventListener("click", function (event) {
+                if (event.target.classList.contains("removeFieldBtn")) {
+                    removeField(event.target.parentElement);
+                }
+            });
+
+            function addField() {
+                const field = document.createElement("div");
+                field.classList.add("field");
+                field.innerHTML = `
+                    <label>Name:</label>
+                    <input type="text" name="name" required>
+                    <label>Age:</label>
+                    <input type="number" name="age" required>
+                    <button type="button" class="removeFieldBtn">Remove</button>
+                `;
+                form.insertBefore(field, addFieldBtn);
+            }
+
+            function removeField(field) {
+                field.remove();
+            }
+
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+                const formData = new FormData(form);
+                const data = {};
+                for (const [key, value] of formData.entries()) {
+                    if (!data[key]) {
+                        data[key] = [];
+                    }
+                    data[key].push(value);
+                }
+                console.log(data);
+            });
+        });
+    </script>
+</body>
+</html>
+``
